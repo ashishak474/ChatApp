@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,11 +35,11 @@ import java.util.HashMap;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private TextView userName;
-    private ImageButton imageButton, sendMsg;
-    private EditText msg;
+    private TextView txt_userName;
+    private ImageButton back_button, message_send;
+    private EditText et_message;
     private UserModel userDetail;
-    private ImageView imageView;
+    private ImageView user_profile;
     private ChatAdapter chatAdapter;
     private DatabaseReference seenReference;
     private ArrayList<ChatModel> chat;
@@ -51,13 +50,13 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        userName = findViewById(R.id.Nameofuser);
-        imageButton = findViewById(R.id.backbuttonofchat);
-        imageView = findViewById(R.id.user_img);
+        txt_userName = findViewById(R.id.Nameofuser);
+        back_button = findViewById(R.id.backbuttonofchat);
+        user_profile = findViewById(R.id.user_img);
         recyclerView = findViewById(R.id.rv_chat);
-        sendMsg = findViewById(R.id.imageviewsendmessage);
+        message_send = findViewById(R.id.imageviewsendmessage);
         userDetail = getIntent().getParcelableExtra("UserModel");
-        msg = findViewById(R.id.getmessage);
+        et_message = findViewById(R.id.getmessage);
         Glide
                 .with(getApplicationContext())
                 .load(userDetail.getUserProfife())
@@ -74,7 +73,7 @@ public class ChatActivity extends AppCompatActivity {
                         return false;
                     }
                 })
-                .into(imageView);
+                .into(user_profile);
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -82,15 +81,15 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-        sendMsg.setOnClickListener(new View.OnClickListener() {
+        message_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = msg.getText().toString();
+                String message = et_message.getText().toString();
                 String receiver = userDetail.getUserId();
                 String sender = FirebaseAuth.getInstance().getUid();
                 if (!message.isEmpty()) {
                     sendMessage(sender, receiver, message);
-                    msg.setText("");
+                    et_message.setText("");
 
                 } else {
                     Toast.makeText(ChatActivity.this, "Chat can't be empty", Toast.LENGTH_SHORT).show();
@@ -101,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -109,7 +108,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-        userName.setText(userDetail.getUserName());
+        txt_userName.setText(userDetail.getUserName());
         readMessage(FirebaseAuth.getInstance().getUid(), userDetail.getUserId());
 
         seenMessage(userDetail.getUserId());

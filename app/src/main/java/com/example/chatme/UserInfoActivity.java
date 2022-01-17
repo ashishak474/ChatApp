@@ -29,13 +29,13 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class UserInfoActivity extends AppCompatActivity {
-    private EditText name;
+    private EditText et_userName;
     private FirebaseDatabase firebaseDatabase;
-    private Button save;
-    private ImageView imageView;
+    private Button btn_save;
+    private ImageView img_userImage;
     private FirebaseStorage storage;
     private StorageReference storageReference;
-    private String url;
+    private String img_url;
     private Uri imageUri;
     private ProgressDialog progressDialog;
     private final int PICK_IMAGE_REQUEST = 2;
@@ -47,12 +47,12 @@ public class UserInfoActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please Wait");
-        save = findViewById(R.id.saveProfile);
+        btn_save = findViewById(R.id.saveProfile);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        name = findViewById(R.id.getusername);
-        imageView = findViewById(R.id.userimage);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        et_userName = findViewById(R.id.getusername);
+        img_userImage = findViewById(R.id.userimage);
+        img_userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
@@ -60,12 +60,12 @@ public class UserInfoActivity extends AppCompatActivity {
         });
 
 
-        save.setOnClickListener(new View.OnClickListener() {
+        btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
 
-                String uname = name.getText().toString();
+                String uname = et_userName.getText().toString();
                 String userId = getIntent().getStringExtra("id");
                 String userNumber = getIntent().getStringExtra("userNumber");
 
@@ -79,13 +79,13 @@ public class UserInfoActivity extends AppCompatActivity {
 
                             Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl();
                             while (!downloadUri.isSuccessful()) ;
-                            url = downloadUri.getResult().toString();
+                            img_url = downloadUri.getResult().toString();
 
                             UserModel user = new UserModel();
                             user.setUserId(userId);
                             user.setUserNumber(userNumber);
                             user.setUserName(uname);
-                            user.setUserProfife(url);
+                            user.setUserProfife(img_url);
                             DatabaseReference databaseReference = firebaseDatabase.getReference("UserDetails").child(userId);
                             databaseReference.setValue(user);
 
@@ -130,7 +130,7 @@ public class UserInfoActivity extends AppCompatActivity {
             imageUri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                imageView.setImageBitmap(bitmap);
+                img_userImage.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,10 +21,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
 
 public class OtpActivity extends AppCompatActivity {
 
@@ -34,7 +30,7 @@ public class OtpActivity extends AppCompatActivity {
     private String TAG = "OTPACTIVITY";
     private ProgressDialog progressDialog;
     private FirebaseDatabase firebaseDatabase;
-    private TextView number;
+    private TextView txt_userNumber;
 
     private FirebaseAuth mAuth;
 
@@ -49,7 +45,7 @@ public class OtpActivity extends AppCompatActivity {
         progressDialog.setMessage("Please Wait...");
         userNumber = getIntent().getStringExtra("number");
         mVerificationId = getIntent().getStringExtra("mVerificationId");
-        number.setText(userNumber);
+        txt_userNumber.setText(userNumber);
         numberMove();
 
 
@@ -188,7 +184,7 @@ public class OtpActivity extends AppCompatActivity {
         et4 = findViewById(R.id.ett_otp4);
         et5 = findViewById(R.id.ett_otp5);
         et6 = findViewById(R.id.ett_otp6);
-        number = findViewById(R.id.txt_num);
+        txt_userNumber = findViewById(R.id.txt_num);
     }
 
     private void verifyOtp(String code) {
